@@ -5,16 +5,16 @@ app = Flask(__name__)
 CORS(app)
 
 tasks = [
-    {"id": 1, "title": "Buy books", "description": "Order textbooks online", "due": "2025-08-25", "categories": ["urgent", "important"], "completed": False},
-    {"id": 2, "title": "Apply for club", "description": "Write and submit application", "due": "2025-08-23", "categories": ["not urgent", "important"], "completed": False},
+    {"id": 1, "title": "Finish DA2", "description": "Complete assignment 2", "due": "2025-09-01", "categories": ["urgent", "important"], "completed": False},
+    {"id": 2, "title": "Review and Submit DAI", "description": "Homework DAI submission", "due": "2025-08-28", "categories": ["not urgent", "important"], "completed": True},
 ]
 
 def get_next_id():
-    return max((t["id"] for t in tasks), default=0) + 1
+    return max((task["id"] for task in tasks), default=0) + 1
 
 @app.route('/api/tasks', methods=['GET'])
 def get_tasks():
-    return jsonify(tasks)
+    return jsonify(tasks), 200
 
 @app.route('/api/tasks', methods=['POST'])
 def add_task():
@@ -43,22 +43,6 @@ def delete_task(task_id):
     global tasks
     tasks = [task for task in tasks if task["id"] != task_id]
     return '', 204
-
-# Stub for future AI categorization endpoint
-@app.route('/api/ai/categorize', methods=['POST'])
-def ai_categorize():
-    # For now, simply returns categories based on keywords in title/desc
-    data = request.json
-    title = data.get("title", "").lower()
-    desc = data.get("description", "").lower()
-    cats = []
-    if "urgent" in title or "urgent" in desc:
-        cats.append("urgent")
-    if "important" in title or "important" in desc:
-        cats.append("important")
-    if not cats:
-        cats = ["not urgent", "not important"]
-    return jsonify({"categories": cats})
 
 if __name__ == '__main__':
     app.run(debug=True)
